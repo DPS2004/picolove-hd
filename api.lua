@@ -495,8 +495,8 @@ function api.sspr(sx, sy, sw, sh, dx, dy, dw, dh, flip_x, flip_y)
 	-- flip_y = true to flip vertically
 	dw = dw or sw
 	dh = dh or sh
-  dw = dw * 2
-  dh = dh * 2
+  dw = dw * drawscale
+  dh = dh * drawscale
 	-- FIXME: cache this quad
 	local q =
 		love.graphics.newQuad(sx, sy, sw, sh, pico8.spritesheet:getDimensions())
@@ -505,8 +505,8 @@ function api.sspr(sx, sy, sw, sh, dx, dy, dw, dh, flip_x, flip_y)
 	love.graphics.draw(
 		pico8.spritesheet,
 		q,
-		flr(dx*2) + (flip_x and dw or 0),
-		flr(dy*2) + (flip_y and dh or 0),
+		flr(dx*drawscale) + (flip_x and dw or 0),
+		flr(dy*drawscale) + (flip_y and dh or 0),
 		0,
 		dw / sw * (flip_x and -1 or 1),
 		dh / sh * (flip_y and -1 or 1)
@@ -538,12 +538,13 @@ function api.rectfill(x0, y0, x1, y1, col)
 	if y1 < y0 then
 		y0, y1 = y1, y0
 	end
+  
 	love.graphics.rectangle(
 		"fill",
-		flr(x0*drawscale+ceil(drawscale/2)),
-		flr(y0*drawscale+ceil(drawscale/2)),
-		flr(x1*drawscale - x0*drawscale - ceil(drawscale/2))+1,
-		flr(y1*drawscale - y0*drawscale - ceil(drawscale/2))+1 
+		flr(x0*drawscale+ceil(drawscale/2)-1),
+		flr(y0*drawscale+ceil(drawscale/2)-1),
+		flr(x1*drawscale - x0*drawscale+drawscale),
+		flr(y1*drawscale - y0*drawscale+drawscale) 
 	)
 end
 
