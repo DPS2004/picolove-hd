@@ -313,8 +313,8 @@ function love.load(argv)
 	pico8.screen =
 		love.graphics.newCanvas(pico8.resolution[1], pico8.resolution[2])
 	pico8.screen:setFilter("linear", "nearest")
-
-	local font = love.graphics.newImageFont("font.png", glyphs, 1)
+  
+	local font = love.graphics.newImageFont("font_".. fontscale ..".png", glyphs, 1)
 	love.graphics.setFont(font)
 	font:setFilter("nearest", "nearest")
 

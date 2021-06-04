@@ -1,6 +1,7 @@
 !nocart.p8
 !test/*.p8
 !scaletest.p8
+!ld45.p8
 *.p8
 .DS_Store
 build/*.love

@@ -142,7 +142,7 @@ function api._completecommand(command, path)
 	if #files == 0 then
 		result = path
 	elseif #files == 1 then
-		if love.filesystem.isDirectory(currentDirectory .. startDir .. files[1]) then
+		if love.filesystem.getInfo(currentDirectory .. startDir .. files[1]) then
 			result = files[1]:lower() .. "/"
 		else
 			result = files[1]:lower()
@@ -402,7 +402,7 @@ function api.print(str, x, y, col)
 	end
 	local to_print = tostring(str):gsub("[^%z\32-\127]", " ")
 	love.graphics.setShader(pico8.text_shader)
-	love.graphics.print(to_print, flr(x*drawscale), flr(y*drawscale),0,drawscale,drawscale)
+	love.graphics.print(to_print, flr(x*drawscale), flr(y*drawscale),0,drawscale/fontscale,drawscale/fontscale)
 end
 
 api.printh = print
@@ -626,10 +626,10 @@ function api.line(x0, y0, x1, y1, col)
 		return
 	end
 
-	x0 = flr(x0)
-	y0 = flr(y0)
-	x1 = flr(x1)
-	y1 = flr(y1)
+	x0 = flr(x0*drawscale)
+	y0 = flr(y0*drawscale)
+	x1 = flr(x1*drawscale)
+	y1 = flr(y1*drawscale)
 
 	local dx = x1 - x0
 	local dy = y1 - y0
@@ -694,6 +694,7 @@ function api.line(x0, y0, x1, y1, col)
 			end
 		end
 	end
+  love.graphics.setPointSize(drawscale)
 	love.graphics.points(points)
 end
 
@@ -758,8 +759,8 @@ function api.map(cel_x, cel_y, sx, sy, cel_w, cel_h, bitmask)
 	love.graphics.setColor(255, 255, 255, 255)
 	cel_x = flr(cel_x or 0)
 	cel_y = flr(cel_y or 0)
-	sx = flr(sx or 0)
-	sy = flr(sy or 0)
+	sx = flr(sx*drawscale or 0)
+	sy = flr(sy*drawscale or 0)
 	cel_w = flr(cel_w or 128)
 	cel_h = flr(cel_h or 64)
 	for y = 0, cel_h - 1 do
@@ -773,7 +774,10 @@ function api.map(cel_x, cel_y, sx, sy, cel_w, cel_h, bitmask)
 								pico8.spritesheet,
 								pico8.quads[v],
 								sx + 8 * x * drawscale,
-								sy + 8 * y * drawscale
+								sy + 8 * y * drawscale,
+                0,
+                drawscale,
+                drawscale
 							)
 						else
 							if bit.band(pico8.spriteflags[v], bitmask) ~= 0 then
@@ -781,7 +785,10 @@ function api.map(cel_x, cel_y, sx, sy, cel_w, cel_h, bitmask)
 									pico8.spritesheet,
 									pico8.quads[v],
 									sx + 8 * x * drawscale,
-									sy + 8 * y * drawscale
+									sy + 8 * y * drawscale,
+                  0,
+                  drawscale,
+                  drawscale
 								)
 							end
 						end

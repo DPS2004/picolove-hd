@@ -7,10 +7,30 @@ __pico_resolution = {128, 128}
 
 -- hd options
 drawscale = 2
+
 pointmode = "rectanglestrict" -- can be "circle", "rectangle", or "rectanglestrict"
 
-scaledebug = true
+scaledebug = false
+
+textscale = true
+
+defaultfontscale = 1
+
 bootcart = "scaletest.p8"
+
+
+
+-- don't touch beyond here! --
+
+
+if defaultfontscale > scale then 
+  defaultfontscale = scale
+end
+
+fontscale = defaultfontscale
+if textscale then
+  fontscale = drawscale
+end
 
 function love.conf(t)
 	t.console = true
