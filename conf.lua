@@ -7,9 +7,9 @@ __pico_resolution = {128, 128}
 
 -- hd options
 drawscale = 2
-pointmode = "rectangle" -- can be "circle", "rectangle", or "rectanglestrict"
+pointmode = "rectanglestrict" -- can be "circle", "rectangle", or "rectanglestrict"
 
-scaledebug = true
+scaledebug = false
 
 function love.conf(t)
 	t.console = true
