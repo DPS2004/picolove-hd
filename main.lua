@@ -1,5 +1,5 @@
 package.path = package.path .. ";./lib/?.lua"
-
+require('lib.cindy').applyPatch()
 require("lib.strict")
 local QueueableSource = require("lib.QueueableSource")
 
