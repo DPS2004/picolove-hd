@@ -1,6 +1,7 @@
 local api = {}
 
 local flr = math.floor
+local ceil = math.ceil
 
 local function color(c)
 	c = flr(c or 0) % 16
@@ -86,13 +87,18 @@ function api.flip()
 end
 
 function api.camera(x, y)
-	pico8.camera_x = flr(tonumber(x) or 0)
-	pico8.camera_y = flr(tonumber(y) or 0)
+	pico8.camera_x = flr(tonumber(x) or 0) * drawscale
+	pico8.camera_y = flr(tonumber(y) or 0) * drawscale
 	restore_camera()
 end
 
 function api.clip(x, y, w, h)
 	if type(x) == "number" then
+    x = x * drawscale
+    y = y * drawscale
+    w = w * drawscale
+    h = h * drawscale
+    
 		love.graphics.setScissor(x, y, w, h)
 		pico8.clip = {x, y, w, h}
 	else
@@ -342,7 +348,13 @@ function api.pset(x, y, c)
 	if c then
 		color(c)
 	end
-	love.graphics.point(flr(x), flr(y))
+  if pointmode == "circle" then
+    love.graphics.circle("fill",flr(x*drawscale + drawscale / 2), flr(y*drawscale + drawscale / 2), drawscale / 2)
+  elseif pointmode == "rectanglestrict" then
+    love.graphics.rectangle("fill",flr(x)*drawscale, flr(y)*drawscale,drawscale,drawscale)
+  else
+    love.graphics.rectangle("fill",flr(x*drawscale), flr(y*drawscale),drawscale,drawscale)
+  end
 end
 
 function api.pget(x, y)
@@ -350,7 +362,7 @@ function api.pget(x, y)
 		love.graphics.setCanvas()
 		local __screen_img = pico8.screen:newImageData()
 		love.graphics.setCanvas(pico8.screen)
-		local r = __screen_img:getPixel(flr(x), flr(y))
+		local r = __screen_img:getPixel(flr(x*drawscale), flr(y*drawscale))
 		return flr(r / 17.0)
 	end
 	warning(string.format("pget out of screen %d, %d", x, y))
@@ -390,7 +402,7 @@ function api.print(str, x, y, col)
 	end
 	local to_print = tostring(str):gsub("[^%z\32-\127]", " ")
 	love.graphics.setShader(pico8.text_shader)
-	love.graphics.print(to_print, flr(x), flr(y))
+	love.graphics.print(to_print, flr(x*drawscale), flr(y*drawscale),0,drawscale,drawscale)
 end
 
 api.printh = print
@@ -401,7 +413,7 @@ function api.cursor(x, y, col)
 	end
 	x = flr(tonumber(x) or 0) % 256
 	y = flr(tonumber(y) or 0) % 256
-	pico8.cursor = {x, y}
+	pico8.cursor = {x*drawscale, y*drawscale}
 end
 
 function api.tonum(val)
@@ -503,12 +515,13 @@ function api.rect(x0, y0, x1, y1, col)
 	if col then
 		color(col)
 	end
+  love.graphics.setLineWidth(drawscale)
 	love.graphics.rectangle(
 		"line",
-		flr(x0) + 1,
-		flr(y0) + 1,
-		flr(x1 - x0),
-		flr(y1 - y0)
+		flr(x0*drawscale+ceil(drawscale/2)),
+		flr(y0*drawscale+ceil(drawscale/2)),
+		flr(x1*drawscale - x0*drawscale - ceil(drawscale/2))+1,
+		flr(y1*drawscale - y0*drawscale - ceil(drawscale/2))+1 
 	)
 end
 
@@ -524,10 +537,10 @@ function api.rectfill(x0, y0, x1, y1, col)
 	end
 	love.graphics.rectangle(
 		"fill",
-		flr(x0),
-		flr(y0),
-		flr(x1 - x0) + 1,
-		flr(y1 - y0) + 1
+		flr(x0*drawscale),
+		flr(y0*drawscale),
+		flr(x1*drawscale - x0*drawscale) + 1,
+		flr(y1*drawscale - y0*drawscale) + 1
 	)
 end
 

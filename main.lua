@@ -17,7 +17,7 @@ pico8 = {
 	clip = nil,
 	fps = 30,
 	frametime = 1 / 30,
-	resolution = __pico_resolution,
+	resolution = {__pico_resolution[1] * drawscale, __pico_resolution[2] * drawscale},
 	screen = nil,
 	palette = {
 		{0, 0, 0, 255},
@@ -92,7 +92,7 @@ pico8 = {
 	spritesheet = nil
 }
 
-local flr, abs = math.floor, math.abs
+local flr, abs, ceil = math.floor, math.abs, math.ceil
 
 loaded_code = nil
 
@@ -193,7 +193,7 @@ function _load(_cartname)
 
 	local file_found = false
 	for i = 1, #exts do
-		if love.filesystem.isFile(currentDirectory .. cart_no_ext .. exts[i]) then
+		if love.filesystem.getInfo(currentDirectory .. cart_no_ext .. exts[i]) then
 			file_found = true
 			_cartname = cart_no_ext .. exts[i]
 			break
@@ -400,7 +400,9 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 	api.camera()
 	api.pal()
 	api.color(6)
-
+  if scaledebug == true then
+    argv[2] = "scaletest.p8"
+  end
 	_load(argv[2] or "nocart.p8")
 	api.run()
 end
@@ -494,7 +496,7 @@ function flip_screen()
 	if screen_w > screen_h then
 		love.graphics.draw(
 			pico8.screen,
-			screen_w / 2 - 64 * scale,
+			screen_w / 2 - 64 * scale*drawscale,
 			ypadding * scale,
 			0,
 			scale,
