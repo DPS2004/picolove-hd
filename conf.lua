@@ -9,7 +9,8 @@ __pico_resolution = {128, 128}
 drawscale = 2
 pointmode = "rectanglestrict" -- can be "circle", "rectangle", or "rectanglestrict"
 
-scaledebug = false
+scaledebug = true
+bootcart = "scaletest.p8"
 
 function love.conf(t)
 	t.console = true

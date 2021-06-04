@@ -401,7 +401,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 	api.pal()
 	api.color(6)
   if scaledebug == true then
-    argv[2] = "scaletest.p8"
+    argv[2] = bootcart
   end
 	_load(argv[2] or "nocart.p8")
 	api.run()
@@ -916,7 +916,20 @@ function patch_lua(lua)
 	-- TODO: handle edge case "if x then i += 1 % 2 end" with % as +-*/%(^.:#)[
 	--lua = lua:gsub("([\n\r]%s*)(%a[%a%d]*)%s*([%+-%*/%%])=(%s*%S*)([^\n\r]*)", "%1%2 = %2 %3 (%4)%5")
 	--lua = lua:gsub("^(%s*)(%a[%a%d]*)%s*([%+-%*/%%])=(%s*%S*)([^\n\r]*)", "%1%2 = %2 %3 (%4)%5")
-	lua = lua:gsub("(%S+)%s*([%+-%*/%%])=", "%1 = %1 %2 ")
+  local lualines = {}
+  for s in lua:gmatch("[^\r\n]+") do
+      table.insert(lualines, s)
+  end
+  lua = ""
+  for i,v in ipairs(lualines) do -- a patch to get Eight Legs to Love to work
+    if v ~= 'local symbol,tile_symbols=char_at(map,s),"abcdefghijklmnopqrstuvwxyz0123456789!@#$%^()-=[]{}:;<>/?`~"' then
+      v = v:gsub("(%S+)%s*([%+-%*/%%])=", "%1 = %1 %2 ")
+    else
+      print("eight legs to love level loading code detected, stopping replacement")
+    end
+
+    lua = lua .. v .. "\n"
+  end
 	-- rewrite inspect operator "?"
 	lua = lua:gsub("([\n\r]%s*)?([^\n\r]*)", "%1print(%2)")
 	lua = lua:gsub("^(%s*)?([^\n\r]*)", "%1print(%2)")

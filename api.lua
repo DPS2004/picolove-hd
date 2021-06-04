@@ -772,16 +772,16 @@ function api.map(cel_x, cel_y, sx, sy, cel_w, cel_h, bitmask)
 							love.graphics.draw(
 								pico8.spritesheet,
 								pico8.quads[v],
-								sx + 8 * x,
-								sy + 8 * y
+								sx + 8 * x * drawscale,
+								sy + 8 * y * drawscale
 							)
 						else
 							if bit.band(pico8.spriteflags[v], bitmask) ~= 0 then
 								love.graphics.draw(
 									pico8.spritesheet,
 									pico8.quads[v],
-									sx + 8 * x,
-									sy + 8 * y
+									sx + 8 * x * drawscale,
+									sy + 8 * y * drawscale
 								)
 							end
 						end
