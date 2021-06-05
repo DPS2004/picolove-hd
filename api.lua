@@ -1405,12 +1405,33 @@ function api.btnp(i, p)
 end
 
 function api.cartdata(id) -- luacheck: no unused
+  print("cartdata called")
 	-- TODO: handle global cartdata properly
 	-- TODO: handle cartdata() from console should not work
 	pico8.can_cartdata = true
+  pico8.cartdata_id = id
 	-- if cartdata exists
 	-- return true
-	return false
+  local cdfound = false
+  if love.filesystem.getInfo(cartdatadirectory..id..".cartdata") then
+    print("loading found cartdata")
+    cdfound = true
+    local cdi = 0
+    for line in love.filesystem.lines(cartdatadirectory..id..".cartdata") do
+      pico8.cartdata[cdi] = tonumber(line)
+    end
+  else
+    local newcd = ""
+    for i=0,63 do
+      newcd = newcd .. "0"
+      if i ~= 63 then
+        newcd = newcd .. "\n"
+      end
+    end
+    love.filesystem.write(cartdatadirectory..id..".cartdata",newcd)
+    print("saving cartdata")
+  end
+  return cdfound
 end
 
 function api.dget(index)
@@ -1444,6 +1465,17 @@ function api.dset(index, value)
 		return
 	end
 	pico8.cartdata[index] = value
+  if autosavecartdata then
+    local newcd = ""
+    for i=0,63 do
+      newcd = newcd .. pico8.cartdata[i]
+      if i ~= 63 then
+        newcd = newcd .. "\n"
+      end
+    end
+    love.filesystem.write(cartdatadirectory..pico8.cartdata_id..".cartdata",newcd)
+    print("autosaving cartdata")
+  end
 end
 
 local tfield = {[0] = "year", "month", "day", "hour", "min", "sec"}

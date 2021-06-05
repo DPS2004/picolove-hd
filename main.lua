@@ -46,6 +46,7 @@ pico8 = {
 	current_music = nil,
 	usermemory = {},
 	cartdata = {},
+  cartdata_id = "none",
 	cart = nil,
 	clipboard = "",
 	keypressed = {

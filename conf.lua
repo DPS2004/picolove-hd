@@ -5,7 +5,7 @@ ypadding = 3.5
 __pico_resolution = {128, 128}
 
 
--- hd options
+-- picolove-hd options
 drawscale = 4
 
 pointmode = "rectangle" -- can be "circle", "rectangle", or "rectanglestrict"
@@ -20,6 +20,9 @@ bootcart = "scaletest.p8"
 
 assetdir = "cartfiles/"
 
+autosavecartdata = true
+
+cartdatadirectory = "cartdata/"
 
 
 scaledebug = false
