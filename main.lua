@@ -211,6 +211,8 @@ function _load(_cartname)
 	api.camera()
 	restore_clip()
 	cartname = _cartname
+  print(cartname)
+  
 	if cart.load_p8(currentDirectory .. _cartname) then
 		api.print("loaded " .. _cartname, nil, nil, 6)
 	end

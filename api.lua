@@ -142,7 +142,7 @@ function api._completecommand(command, path)
 	if #files == 0 then
 		result = path
 	elseif #files == 1 then
-		if love.filesystem.getInfo(currentDirectory .. startDir .. files[1]) then
+		if love.filesystem.getInfo(currentDirectory .. startDir .. files[1]).filetype == "directory" then
 			result = files[1]:lower() .. "/"
 		else
 			result = files[1]:lower()
@@ -495,18 +495,20 @@ function api.sspr(sx, sy, sw, sh, dx, dy, dw, dh, flip_x, flip_y)
 	-- flip_y = true to flip vertically
 	dw = dw or sw
 	dh = dh or sh
-  dw = dw * drawscale
-  dh = dh * drawscale
+  dw = dw * drawscale / spritescale
+  dh = dh * drawscale / spritescale
+  dx = dx or 0
+  dy = dy or 0
 	-- FIXME: cache this quad
 	local q =
-		love.graphics.newQuad(sx, sy, sw, sh, pico8.spritesheet:getDimensions())
+		love.graphics.newQuad(sx*spritescale, sy*spritescale, sw*spritescale, sh*spritescale, pico8.spritesheet:getDimensions())
 	love.graphics.setShader(pico8.sprite_shader)
 	pico8.sprite_shader:send("transparent", shdr_unpack(pico8.pal_transparent))
 	love.graphics.draw(
 		pico8.spritesheet,
 		q,
-		flr(dx*drawscale) + (flip_x and dw or 0),
-		flr(dy*drawscale) + (flip_y and dh or 0),
+		flr(dx*drawscale) + (flip_x and dw or 0)*spritescale,
+		flr(dy*drawscale) + (flip_y and dh or 0)*spritescale,
 		0,
 		dw / sw * (flip_x and -1 or 1),
 		dh / sh * (flip_y and -1 or 1)

@@ -1,4 +1,4 @@
-scale = 2
+scale = 1
 
 xpadding = 8.5
 ypadding = 3.5
@@ -6,30 +6,37 @@ __pico_resolution = {128, 128}
 
 
 -- hd options
-drawscale = 2
+drawscale = 4
 
-pointmode = "rectanglestrict" -- can be "circle", "rectangle", or "rectanglestrict"
+pointmode = "rectangle" -- can be "circle", "rectangle", or "rectanglestrict"
 
-scaledebug = false
+spritereplace = true
 
 textscale = true
 
-defaultfontscale = 1
+fontscale = 2
 
 bootcart = "scaletest.p8"
 
+assetdir = "cartfiles/"
 
+
+
+scaledebug = false
 
 -- don't touch beyond here! --
 
 
-if defaultfontscale > scale then 
-  defaultfontscale = scale
+if fontscale > drawscale then 
+  defaultfontscale = drawscale
 end
 
-fontscale = defaultfontscale
-if textscale then
-  fontscale = drawscale
+spritescale = 1
+
+
+
+if not textscale then
+  fontscale = 1
 end
 
 function love.conf(t)

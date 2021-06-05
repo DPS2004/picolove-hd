@@ -49,7 +49,7 @@ end
 
 local cart = {}
 
-function cart.load_p8(filename)
+function cart.load_p8(filename,ss)
 	log("Loading", filename)
 
 	local lua = ""
@@ -311,9 +311,32 @@ function cart.load_p8(filename)
 					love.graphics.newQuad(8 * x, 8 * y, 8, 8, 128, 128)
 			end
 		end
-
-		pico8.spritesheet = love.graphics.newImage(pico8.spritesheet_data)
-
+    
+    local loadsheet = false
+    
+    if love.filesystem.getInfo("cartfiles/"..cartname) then
+      print("replacement assets found!")
+      if love.filesystem.getInfo("cartfiles/"..cartname.."/tex.png") then
+        print("loading sheet")
+        loadsheet = true
+      end
+    end
+    
+    
+    
+    if not spritereplace then
+      pico8.spritesheet = love.graphics.newImage(pico8.spritesheet_data)
+    else
+      if loadsheet then
+        pico8.spritesheet_data:encode( "png", "output.png" )
+        pico8.spritesheet = love.graphics.newImage("cartfiles/"..cartname.."/tex.png")
+        print("sheet loaded!")
+        spritescale = pico8.spritesheet:getWidth() / 128
+      else
+        pico8.spritesheet_data:encode( "png", "output.png" )
+        pico8.spritesheet = love.graphics.newImage(pico8.spritesheet_data)
+      end
+    end
 		-- load the sprite flags
 		local gffdata = data:match("\n__gff__.-\n(.-\n)\n-__")
 
