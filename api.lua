@@ -554,9 +554,9 @@ function api.circ(ox, oy, r, col)
 	if col then
 		color(col)
 	end
-	ox = flr(ox)
-	oy = flr(oy)
-	r = flr(r)
+	ox = flr(ox*drawscale)
+	oy = flr(oy*drawscale)
+	r = flr(r*drawscale)
 	local points = {}
 	local x = r
 	local y = 0
@@ -589,9 +589,9 @@ function api.circfill(cx, cy, r, col)
 	if col then
 		color(col)
 	end
-	cx = flr(cx)
-	cy = flr(cy)
-	r = flr(r)
+	cx = flr(cx*drawscale)
+	cy = flr(cy*drawscale)
+	r = flr(r*drawscale)
 	local x = r
 	local y = 0
 	local err = 1 - r
